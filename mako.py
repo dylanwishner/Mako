@@ -16,6 +16,9 @@ class Mako:
             file_path = argv[1]
             if self._validate_file_path(file_path):
                 file = open(file_path, "r")
+                source = file.read()
+                file.close()
+                self._run(source)
 
     """
     Validate that the correct number of arguments were provided. (2): program + file_path
@@ -38,8 +41,8 @@ class Mako:
             self.report_error("File not found at \'%s\'" % file_path)
             return False
 
-    def _run_file(self, file_path):
-        lexer = Lexer()
+    def _run(self, source):
+        lexer = Lexer(source)
 
     """
     Report an error from anywhere in the compiling stage
