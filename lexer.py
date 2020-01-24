@@ -1,40 +1,38 @@
-"""
-Lexer class for Mako. Reads the source code from the provided file
-and separates the source code into individual tokens.
-"""
-
 from token import Token, TokenType as type
 
 
 class Lexer:
+    """
+    Lexer class for Mako. Reads the source code from the provided file
+    and separates the source code into individual tokens.
+    """
     source = ""
     tokens = []
-    start = 0
     current = 0
     line = 1
 
     def __init__(self, source):
         self.source = source
 
-    """
-    Return a list of all the token objects found in the file.
-    """
-
     def scan_tokens(self) -> [Token]:
+        """
+        Return a list of all the token objects found in the file.
+        """
+
         while not self._at_end_of_file():
-            self.start = self.current
             self._scan_next()
 
         self.tokens.append(Token(type.EOF, self.line))
         return self.tokens
 
-    """
-    Return the next character.
-    """
-
     def _scan_next(self):
+        """
+        Return the next character.
+        """
         char = self._consume_char()
-        if char == '+':
+        if char.isspace():
+            self.current += 1
+        elif char == '+':
             self.tokens.append(Token(type.PLUS, self.line))
         elif char == '-':
             self.tokens.append(Token(type.MINUS, self.line))
@@ -86,60 +84,52 @@ class Lexer:
                 self.tokens.append(Token(type.LESS, self.line))
 
         elif char.isalpha():
-            if char == 'e':
-                if self._peek_at_substring(self.current, self.current + 4, 'else'):
-                    if self._peek_at_substring(self.current, self.current + 7, 'else if'):
-                        self.tokens.append(Token(type.ELSE_IF, self.line))
-                    else:
-                        self.tokens.append(Token(type.ELSE, self.line))
-            if char == 'i':
-                if self._peek_next_char('f'):
-                    self.tokens.append(Token(type.IF, self.line))
-            if char == 'w':
-                if self._peek_at_substring(self.current, self.current + 5, 'while'):
-                    self.tokens.append(Token(type.WHILE, self.line))
+            self._add_string()
 
-        elif char.isdigit():
-            value = ""
-            index = self.current
-
-            while self.source[index].isdigit():
-                value += self.source[index]
-                index += 1
-
-        elif char == '"':
-            value = ""
-            index = self.current
-
-            while self.source[index] != '"':
-                value += self.source[index]
-                index += 1
-
-    """
-    Read, consume, and return the char at the current position.
-    """
 
     def _consume_char(self) -> str:
+        """
+        Read, consume, and return the char at the current position.
+        """
         self.current += 1
         return self.source[self.current - 1]
 
-    """
-    Peek the next character without consuming it.
-    """
-
     def _peek_next_char(self, expected) -> bool:
+        """
+        Peek the next character without consuming it.
+        """
         return self.source[self.current + 1] == expected
 
-    """
-    Peek at a substring and compare it with the expected expression.
-    """
-
     def _peek_at_substring(self, start, end, expected) -> bool:
+        """
+        Peek at a substring and compare it with the expected expression.
+        """
         return self.source[start::end] == expected
 
-    """
-    Ensure we haven't yet hit the end of file
-    """
-
     def _at_end_of_file(self) -> bool:
-        return self.current >= len(self.source)
+        """
+        Ensure we haven't yet hit the end of file.
+        """
+        return self.current >= len(self.source) - 1
+
+    def _add_string(self):
+        print("adding")
+        index = self.current
+        var_name = ""
+        literal = ""
+
+        while not self.source[index].isspace():
+            var_name += self.source[index]
+            index += 1
+
+        index += 1
+        while self.source[index] != '"':
+            index += 1
+
+        index += 1
+        while self.source[index] != '"':
+            literal += self.source[index]
+            index += 1
+
+        self.tokens.append(Token(type.STRING, self.line, var_name, literal))
+        self.current = index

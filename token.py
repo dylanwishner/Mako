@@ -1,12 +1,10 @@
-"""
-Defines the structure of a token object.
-"""
-
-import enum
+from enum import Enum
 
 
 class Token:
     """
+    Defines the structure of a token object.
+
     type: token type
     line: the line the token appears on
     name (optional): a name value if the token is a variable, function, or class name
@@ -20,12 +18,12 @@ class Token:
         self.literal = literal
 
 
-class TokenType(enum):
+class TokenType(Enum):
     # Mathematical tokens
-    PLUS = '+'
-    MINUS = '-'
-    STAR = '*'
-    SLASH = '/'
+    PLUS = '+',
+    MINUS = '-',
+    STAR = '*',
+    SLASH = '/',
 
     # Single char tokens
     LEFT_PAREN = '('

@@ -1,15 +1,14 @@
-"""
-Main class for the compiler. Gathers the input, validates arguments,
-and does other checks before executing.
-"""
-
 from sys import argv, exit
 from lexer import Lexer
 
 
 class Mako:
+    """
+    Main class for the compiler. Gathers the input, validates arguments,
+    and does other checks before executing.
+    """
     def __init__(self):
-        if self._validate_args():
+        if not self._validate_args():
             self.report_error("Usage: mako <file>")
             exit(64)
         else:
@@ -20,10 +19,11 @@ class Mako:
                 file.close()
                 self._run(source)
 
-    """
-    Validate that the correct number of arguments were provided. (2): program + file_path
-    """
     def _validate_args(self) -> bool:
+        """
+        Validate that the correct number of arguments were provided. (2): program + file_path
+        :rtype
+        """
         if len(argv) == 2:
             return True
         else:
@@ -43,6 +43,11 @@ class Mako:
 
     def _run(self, source):
         lexer = Lexer(source)
+        tokens = lexer.scan_tokens()
+
+        print(len(tokens))
+        for token in tokens:
+            print(token.token_type)
 
     """
     Report an error from anywhere in the compiling stage

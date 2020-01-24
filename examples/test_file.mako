@@ -1,2 +1,1 @@
-String x = "Test String"
-print(x)
+x = "Test String"
