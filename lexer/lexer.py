@@ -1,4 +1,4 @@
-from token import Token, TokenType as tok_type, reserved_keywords
+from lexer.token import Token, TokenType as tok_type, reserved_keywords
 
 
 class Lexer:
@@ -30,9 +30,8 @@ class Lexer:
         Return the next character.
         """
         char = self.source[self.current]
-        if char.isspace():
-            self.current += 1
-        elif char == '+':
+
+        if char == '+':
             self.tokens.append(Token(tok_type.PLUS, self.line, char))
         elif char == '-':
             self.tokens.append(Token(tok_type.MINUS, self.line, char))
@@ -86,14 +85,10 @@ class Lexer:
         elif char.isalpha():
             self._add_alpha_token()
 
-        self._consume_char()
+        elif char.isdigit():
+            self._add_numeric_token()
 
-    def _consume_char(self) -> str:
-        """
-        Read, consume, and return the char at the current position.
-        """
         self.current += 1
-        return self.source[self.current - 1]
 
     def _peek_next_char(self, expected) -> bool:
         """
@@ -130,3 +125,18 @@ class Lexer:
             self.tokens.append(Token(tok_type.KEYWORD, self.line, keyword))
         else:
             self.tokens.append(Token(tok_type.IDENT, self.line, keyword))
+
+    def _add_numeric_token(self):
+        """
+        Analyze a numeric token
+        """
+        number = ''
+
+        while not self.source[self.current].isspace() or self.source[self.current] != ';':
+            if self._at_end_of_file():
+                break
+            else:
+                number += self.source[self.current]
+                self.current += 1
+
+        self.tokens.append(Token(tok_type.INTEGER, self.line, int(number)))
