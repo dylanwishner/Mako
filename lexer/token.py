@@ -11,11 +11,13 @@ class Token:
     literal (optional): the literal value of integer, string, or char tokens
     """
 
-    def __init__(self, token_type, line, name=None, literal=None):
+    def __init__(self, token_type, line, lexeme):
         self.token_type = token_type
         self.line = line
-        self.name = name
-        self.literal = literal
+        self.lexeme = lexeme
+
+    def __str__(self):
+        return str(self.lexeme) + ' ' + str(self.token_type).replace('TokenType.', '') + ' ' + str(self.line)
 
 
 class TokenType(Enum):
@@ -38,7 +40,7 @@ class TokenType(Enum):
     COMMA = ','
 
     # Comparison tokens
-    EQUALS = '='
+    ASSIGN = '='
     NOT = '!'
     IS_EQUAL = '=='
     NOT_EQUAL = '!='
@@ -50,11 +52,17 @@ class TokenType(Enum):
     # Flow tokens
     IF = 'if'
     ELSE = 'else'
-    ELSE_IF = 'else if'
+    ELSE_IF = 'elif'
     WHILE = 'while'
     EOF = 'eof'
 
     # Type tokens
+    KEYWORD = 'keyword'
+    IDENT = 'identifier'
+    INTEGER = 'integer'
     STRING = 'string'
-    INT = 'int'
-    CHAR = 'char'
+
+
+reserved_keywords = [
+    'if', 'else', 'elif', 'while', 'int', 'string'
+]

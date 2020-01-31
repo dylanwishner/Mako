@@ -31,64 +31,86 @@ class Lexer:
         """
         char = self.source[self.current]
 
-        if char == '+':
+        if char.isspace():
+            self.current += 1
+        elif char == '+':
             self.tokens.append(Token(tok_type.PLUS, self.line, char))
+            self.current += 1
         elif char == '-':
             self.tokens.append(Token(tok_type.MINUS, self.line, char))
+            self.current += 1
         elif char == '*':
             self.tokens.append(Token(tok_type.STAR, self.line, char))
+            self.current += 1
         elif char == '/':
             self.tokens.append(Token(tok_type.SLASH, self.line, char))
+            self.current += 1
 
         elif char == '(':
             self.tokens.append(Token(tok_type.LEFT_PAREN, self.line, char))
+            self.current += 1
         elif char == ')':
             self.tokens.append(Token(tok_type.RIGHT_PAREN, self.line, char))
+            self.current += 1
         elif char == '[':
             self.tokens.append(Token(tok_type.LEFT_BRACK, self.line, char))
+            self.current += 1
         elif char == ']':
             self.tokens.append(Token(tok_type.RIGHT_BRACK, self.line, char))
+            self.current += 1
         elif char == '{':
             self.tokens.append(Token(tok_type.LEFT_CURLY, self.line, char))
+            self.current += 1
         elif char == '}':
             self.tokens.append(Token(tok_type.RIGHT_CURLY, self.line, char))
+            self.current += 1
         elif char == ';':
             self.tokens.append(Token(tok_type.SEMICOLON, self.line, char))
+            self.current += 1
         elif char == ':':
             self.tokens.append(Token(tok_type.COLON, self.line, char))
+            self.current += 1
         elif char == '.':
             self.tokens.append(Token(tok_type.PERIOD, self.line, char))
+            self.current += 1
         elif char == ',':
             self.tokens.append(Token(tok_type.COMMA, self.line, char))
+            self.current += 1
 
         elif char == '=':
             if self._peek_next_char('='):
                 self.tokens.append(Token(tok_type.IS_EQUAL, self.line, '=='))
+                self.current += 1
             else:
                 self.tokens.append(Token(tok_type.ASSIGN, self.line, char))
+                self.current += 1
         elif char == '!':
             if self._peek_next_char('='):
                 self.tokens.append(Token(tok_type.NOT_EQUAL, self.line, '!='))
+                self.current += 1
             else:
                 self.tokens.append(Token(tok_type.NOT, self.line, char))
+                self.current += 1
         elif char == '>':
             if self._peek_next_char('='):
                 self.tokens.append(Token(tok_type.GREATER_EQUAL, self.line, '>='))
+                self.current += 1
             else:
                 self.tokens.append(Token(tok_type.GREATER, self.line, char))
+                self.current += 1
         elif char == '<':
             if self._peek_next_char('='):
                 self.tokens.append(Token(tok_type.LESS_EQUAL, self.line, '<='))
+                self.current += 1
             else:
                 self.tokens.append(Token(tok_type.LESS, self.line, char))
+                self.current += 1
 
         elif char.isalpha():
             self._add_alpha_token()
 
         elif char.isdigit():
             self._add_numeric_token()
-
-        self.current += 1
 
     def _peek_next_char(self, expected) -> bool:
         """
@@ -106,7 +128,7 @@ class Lexer:
         """
         Ensure we haven't yet hit the end of file.
         """
-        return self.current >= len(self.source) - 1
+        return self.current >= len(self.source)
 
     def _add_string(self):
         return NotImplementedError
@@ -132,11 +154,11 @@ class Lexer:
         """
         number = ''
 
-        while not self.source[self.current].isspace() or self.source[self.current] != ';':
-            if self._at_end_of_file():
-                break
-            else:
+        while True:
+            if self.source[self.current].isdigit():
                 number += self.source[self.current]
                 self.current += 1
+            else:
+                break
 
         self.tokens.append(Token(tok_type.INTEGER, self.line, int(number)))

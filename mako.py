@@ -1,5 +1,5 @@
 from sys import argv, exit
-from lexer import Lexer
+from lexer.lexer import Lexer
 
 
 class Mako:
@@ -44,10 +44,7 @@ class Mako:
     def _run(self, source):
         lexer = Lexer(source)
         tokens = lexer.scan_tokens()
-
-        print(len(tokens))
-        for token in tokens:
-            print(token.token_type)
+        self._print_tokens(tokens)
 
     """
     Report an error from anywhere in the compiling stage
@@ -58,6 +55,10 @@ class Mako:
             print("ERR << LINE %d << %s" % line, message)
         else:
             print("ERR << %s" % message)
+
+    def _print_tokens(self, tokens):
+        for token in tokens:
+            print(token)
 
 
 if __name__ == "__main__":

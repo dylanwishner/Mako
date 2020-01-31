@@ -1,1 +1,1 @@
-x = "Test String"
+int x = 5;
