@@ -1,5 +1,5 @@
 from sys import argv, exit
-from lexer.lexer import Lexer
+from lexer import Lexer
 
 
 class Mako:

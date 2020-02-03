@@ -1,4 +1,4 @@
-from lexer.token import Token, TokenType as tok_type, reserved_keywords
+from token_defs import Token, TokenType, reserved_keywords
 
 
 class Lexer:
@@ -22,7 +22,7 @@ class Lexer:
         while not self._at_end_of_file():
             self._scan_next()
 
-        self.tokens.append(Token(tok_type.EOF, self.line, 'eof'))
+        self.tokens.append(Token(TokenType.EOF, self.line, 'eof'))
         return self.tokens
 
     def _scan_next(self):
@@ -34,76 +34,76 @@ class Lexer:
         if char.isspace():
             self.current += 1
         elif char == '+':
-            self.tokens.append(Token(tok_type.PLUS, self.line, char))
+            self.tokens.append(Token(TokenType.PLUS, self.line, char))
             self.current += 1
         elif char == '-':
-            self.tokens.append(Token(tok_type.MINUS, self.line, char))
+            self.tokens.append(Token(TokenType.MINUS, self.line, char))
             self.current += 1
         elif char == '*':
-            self.tokens.append(Token(tok_type.STAR, self.line, char))
+            self.tokens.append(Token(TokenType.STAR, self.line, char))
             self.current += 1
         elif char == '/':
-            self.tokens.append(Token(tok_type.SLASH, self.line, char))
+            self.tokens.append(Token(TokenType.SLASH, self.line, char))
             self.current += 1
 
         elif char == '(':
-            self.tokens.append(Token(tok_type.LEFT_PAREN, self.line, char))
+            self.tokens.append(Token(TokenType.LEFT_PAREN, self.line, char))
             self.current += 1
         elif char == ')':
-            self.tokens.append(Token(tok_type.RIGHT_PAREN, self.line, char))
+            self.tokens.append(Token(TokenType.RIGHT_PAREN, self.line, char))
             self.current += 1
         elif char == '[':
-            self.tokens.append(Token(tok_type.LEFT_BRACK, self.line, char))
+            self.tokens.append(Token(TokenType.LEFT_BRACK, self.line, char))
             self.current += 1
         elif char == ']':
-            self.tokens.append(Token(tok_type.RIGHT_BRACK, self.line, char))
+            self.tokens.append(Token(TokenType.RIGHT_BRACK, self.line, char))
             self.current += 1
         elif char == '{':
-            self.tokens.append(Token(tok_type.LEFT_CURLY, self.line, char))
+            self.tokens.append(Token(TokenType.LEFT_CURLY, self.line, char))
             self.current += 1
         elif char == '}':
-            self.tokens.append(Token(tok_type.RIGHT_CURLY, self.line, char))
+            self.tokens.append(Token(TokenType.RIGHT_CURLY, self.line, char))
             self.current += 1
         elif char == ';':
-            self.tokens.append(Token(tok_type.SEMICOLON, self.line, char))
+            self.tokens.append(Token(TokenType.SEMICOLON, self.line, char))
             self.current += 1
         elif char == ':':
-            self.tokens.append(Token(tok_type.COLON, self.line, char))
+            self.tokens.append(Token(TokenType.COLON, self.line, char))
             self.current += 1
         elif char == '.':
-            self.tokens.append(Token(tok_type.PERIOD, self.line, char))
+            self.tokens.append(Token(TokenType.PERIOD, self.line, char))
             self.current += 1
         elif char == ',':
-            self.tokens.append(Token(tok_type.COMMA, self.line, char))
+            self.tokens.append(Token(TokenType.COMMA, self.line, char))
             self.current += 1
 
         elif char == '=':
             if self._peek_next_char('='):
-                self.tokens.append(Token(tok_type.IS_EQUAL, self.line, '=='))
+                self.tokens.append(Token(TokenType.IS_EQUAL, self.line, '=='))
                 self.current += 1
             else:
-                self.tokens.append(Token(tok_type.ASSIGN, self.line, char))
+                self.tokens.append(Token(TokenType.ASSIGN, self.line, char))
                 self.current += 1
         elif char == '!':
             if self._peek_next_char('='):
-                self.tokens.append(Token(tok_type.NOT_EQUAL, self.line, '!='))
+                self.tokens.append(Token(TokenType.NOT_EQUAL, self.line, '!='))
                 self.current += 1
             else:
-                self.tokens.append(Token(tok_type.NOT, self.line, char))
+                self.tokens.append(Token(TokenType.NOT, self.line, char))
                 self.current += 1
         elif char == '>':
             if self._peek_next_char('='):
-                self.tokens.append(Token(tok_type.GREATER_EQUAL, self.line, '>='))
+                self.tokens.append(Token(TokenType.GREATER_EQUAL, self.line, '>='))
                 self.current += 1
             else:
-                self.tokens.append(Token(tok_type.GREATER, self.line, char))
+                self.tokens.append(Token(TokenType.GREATER, self.line, char))
                 self.current += 1
         elif char == '<':
             if self._peek_next_char('='):
-                self.tokens.append(Token(tok_type.LESS_EQUAL, self.line, '<='))
+                self.tokens.append(Token(TokenType.LESS_EQUAL, self.line, '<='))
                 self.current += 1
             else:
-                self.tokens.append(Token(tok_type.LESS, self.line, char))
+                self.tokens.append(Token(TokenType.LESS, self.line, char))
                 self.current += 1
 
         elif char.isalpha():
@@ -144,9 +144,9 @@ class Lexer:
             self.current += 1
 
         if keyword in reserved_keywords:
-            self.tokens.append(Token(tok_type.KEYWORD, self.line, keyword))
+            self.tokens.append(Token(TokenType.KEYWORD, self.line, keyword))
         else:
-            self.tokens.append(Token(tok_type.IDENT, self.line, keyword))
+            self.tokens.append(Token(TokenType.IDENT, self.line, keyword))
 
     def _add_numeric_token(self):
         """
@@ -161,4 +161,4 @@ class Lexer:
             else:
                 break
 
-        self.tokens.append(Token(tok_type.INTEGER, self.line, int(number)))
+        self.tokens.append(Token(TokenType.INTEGER, self.line, int(number)))
